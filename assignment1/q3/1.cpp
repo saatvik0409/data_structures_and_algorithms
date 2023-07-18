@@ -38,7 +38,9 @@ LinkedList* insertionSort(LinkedList* linkList, long long int list_len){
             comparisons++;
             swaps++;
         }
-        comparisons++;
+        if (itr_node->prev!=nullptr){
+            comparisons++;
+        }
         current_node=current_node->next;
     }
     printer(linkList);

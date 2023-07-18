@@ -103,9 +103,15 @@ linkedList* prime_factor_method(long long int inp_num){
     }
     if (inp_num!=1){
         Node* newNode = new Node(inp_num);
-        linkList->tail->next = newNode;
-        newNode->prev = linkList->tail;
-        linkList->tail = newNode;
+        if (linkList->tail!=nullptr){
+            linkList->tail->next = newNode;
+            newNode->prev = linkList->tail;
+            linkList->tail = newNode;
+        }else{
+            linkList->head = newNode;
+            linkList->tail = newNode;
+        }
+
     }
     return linkList;
 }
@@ -144,6 +150,7 @@ long long int* ret_array(linkedList* linkList){
     long long int index {};
     long long int frequency_val{1};
     current_node = linkList->head->next;
+    //std::cout << "here" << std::endl;
     while (current_node!=nullptr){
         if (current_node->data==current_node->prev->data){
             current_node=current_node->next;
@@ -194,6 +201,7 @@ long long int* ret_array(linkedList* linkList){
     }
 
     std::sort(final_factors,final_factors+factor_count);
+    //std::cout << "here" << std::endl;
     printer2(&final_factors[0],factor_count);
 
 }
@@ -220,6 +228,7 @@ int main(){
     std::cout << "; Time Elapsed : " << time_ender(start_time).count() << std::endl;
     start_time = time_starter();
     linkedList* linkListOut = prime_factor_method(input_number);
+    //std::cout << "here" << std::endl;
     ret_array(linkListOut);
     std::cout << "; Time Elapsed : " << time_ender(start_time).count() << std::endl;
     
