@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <chrono>
 class Node{
     public:
         Node(long long int data){
@@ -57,9 +57,15 @@ int main(){
     std::cout << std::endl;
     std::cout << "Enter the Length of List : ";
     std::cin >> list_len;
+    int arr1[list_len] {};
 
     for (long long int i {};i < list_len; i++){
         std::cin >> node_val;
+        arr1[i] = node_val;
+    }
+    auto beg = std::chrono::steady_clock::now();
+    for (int i {};i < list_len;i++){
+        node_val = arr1[i];
         Node* newNode = new Node(node_val);
         if (linkList->head == nullptr){
             linkList->head = newNode;
@@ -71,7 +77,9 @@ int main(){
         }
     }
     insertionSort(linkList,list_len);
-
+    auto end = std::chrono::steady_clock::now();
+    auto duration = end-beg;
+    std::cout << duration.count() << std::endl;
 
     return 0;
 }
