@@ -32,6 +32,7 @@ class Node{
         LinkedList* adj_list {};
         int color {};
         int distance{};
+        int finish {};
 };
 
 class graph{
@@ -103,7 +104,8 @@ void printer(graph* inp_graph){
         std::cout << "In Count    : " << current_node->in_count << std::endl;
         std::cout << "Out Count   : " << current_node->out_count << std::endl;
         std::cout << "Color       : " << current_node->color << std::endl;
-        std::cout << "Distance    : " << current_node->distance << std::endl;
+        std::cout << "Arrival     : " << current_node->distance << std::endl;
+        std::cout << "Departure   : " << current_node->finish << std::endl;
         std::cout << "Adj Nodes   : ";
         linklistNode* adj_nodes= current_node->adj_list->head;
         while (adj_nodes!=nullptr){
@@ -117,39 +119,36 @@ void printer(graph* inp_graph){
 }
 
 
-void bfs(Node* inp_node,graph* inp_graph){
-    std::cout << " ~ " << inp_node->node_number << " - ";
-    if (inp_node->color==0){
-        inp_node->color=1;
-    }else if (inp_node->color==2){
-        return;
+int dfs(Node* node, graph* inp_graph, int d){
+    if (node->color==0){
+        node->color=1;
+        node->distance=d+1;
+    }else{
+        return d;
     }
-    Node** first_node = inp_graph->nodes;
-    linklistNode* current_node = inp_node->adj_list->head;
-    Node* main_node {};
-    while(current_node!=nullptr){
-        main_node = *(first_node+current_node->data - 1);
-        if (main_node->color==0){
-            main_node->color = 1;
-            main_node->distance=inp_node->distance;
+    int f {d+1};
+    linklistNode* current_node = node->adj_list->head;
+    while (current_node!=nullptr){
+        std::cout <<  " ~ " << current_node->data << " - " <<std::endl;
+        Node* main_node = *(((inp_graph->nodes)+(current_node->data)-1));
+        if (main_node->color!=0){
+            current_node= current_node->next;
+            continue;
         }
-        current_node=current_node->next;
+        f = dfs(main_node,inp_graph,d+1);
+        current_node= current_node->next;
+
     }
-    inp_node->color= 2;
-    current_node = inp_node->adj_list->head;
-    while(current_node!=nullptr){
-        main_node = *(first_node+current_node->data - 1);
-        bfs(main_node,inp_graph);
-        current_node=current_node->next;
-    }
-    return;
+    node->finish=f+1;
+    node->color = 2;
+    return f+1;
 }
 
 int main(){
 
     graph* inp_graph = creator();
     Node* first_node = *(inp_graph->nodes);
-    bfs(first_node,inp_graph);
+    dfs(first_node,inp_graph,0);
     printer(inp_graph);
 
     return 0;
